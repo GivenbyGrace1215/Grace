@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Given by Grace Homecare</title>
+  <style>
+    :root{
+      --pink:#EAF4E0;           /* pale olive */
+      --pink-strong:#A3B18A;    /* olive/sage accent */
+      --gray-900:#111827;       /* near-black text */
+      --gray-700:#374151;       /* primary gray */
+      --gray-500:#6B7280;       /* medium gray */
+      --gray-200:#E5E7EB;       /* light gray borders */
+      --gray-100:#F3F4F6;       /* light gray fills */
+      --white:#FFFFFF;
+      --radius:18px;
+      --shadow:0 8px 24px rgba(17,24,39,.08);
+      /* height of sticky nav and global anchor offset */
+      --nav-height:72px;
+      --anchor-offset:calc(var(--nav-height) + 12px); /* add a little breathing room */
+      --contact-center-bias:4px; /* slightly lower landing for Contact */ /* positive value nudges Contact higher on screen */
+      --careers-center-bias:16px; /* slightly lower landing for Careers */ /* positive value nudges Careers higher on screen */
+      --services-center-bias:8px; /* fine‑tune center landing for Services */
+      --hero-badge-size:144px; /* 100% bigger overlapping logo badge */
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth; scroll-padding-top: var(--anchor-offset);} /* ensure anchors account for sticky header */
+    body{
+      margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color:var(--gray-900); background:var(--white);
+    }
+    a{color:inherit; text-decoration:none}
+
+    /* Top bar */
+    .topbar{position:sticky; top:0; z-index:50; background:rgba(255,255,255,.8); backdrop-filter:saturate(180%) blur(10px); border-bottom:1px solid var(--gray-200)}
+    .container{max-width:1100px; margin-inline:auto; padding:0 20px}
+    .nav{display:flex; align-items:center; justify-content:space-between; height:72px}
+    .brand{display:flex; align-items:center; gap:.6rem; font-weight:700}
+    /* .brand-badge removed (legacy circle placeholder). Using .brand-logo <img> instead. */
+    .navlinks{display:flex; gap:1rem}
+    .navlinks a{padding:.6rem .9rem; border-radius:999px; font-weight:600; color:var(--gray-700)}
+    .navlinks a:hover{background:var(--pink); color:var(--gray-900)}
+    .cta{padding:.7rem 1rem; border-radius:999px; background:var(--pink-strong); color:#111; font-weight:700; border:1px solid #95AD7A}
+    .cta:hover{filter:brightness(.98)}
+    .ctas{display:flex; gap:10px} /* wrapper for multiple top-right CTAs */
+
+    /* Hero */
+    .hero{display:grid; grid-template-columns:1.1fr .9fr; gap:36px; align-items:center; padding:32px 0 calc(8px + var(--hero-badge-size)*0.5)}
+    .hero h1{font-size:clamp(34px, 4vw, 48px); line-height:1.1; margin:0 0 8px}
+    .hero p{font-size:1.1rem; color:var(--gray-700); margin:0 0 14px}
+    .hero-bullets{display:grid; margin:14px 0; column-gap:18px; row-gap:10px; grid-template-columns:1fr 1fr; grid-template-rows:repeat(3,auto); grid-auto-flow:column}
+    .bullet{display:flex; align-items:center; gap:10px}
+    .check{width:26px; height:26px; border-radius:8px; background:var(--pink); display:grid; place-items:center; border:1px solid var(--pink-strong)}
+    .check svg{width:16px; height:16px}
+
+    /* Add breathing room between checklist and CTA in hero */
+    .hero .cta{display:inline-block; margin-top:16px}
+
+    /* Placeholder media blocks */
+    
+    
+
+    .ph.hero-media{min-height:320px} /* only placeholders get a minimum height */
+    img.hero-media{width:100%; height:auto; display:block; border-radius:var(--radius)} /* real images keep aspect ratio */
+
+    /* Hero overlay badge (half overlaps the hero image) */
+    .hero-media-wrap{position:relative; justify-self:end} /* ensure the hero image aligns with the right edge of its grid column */
+    /* Overlapping company logo badge (bigger + lower into the corner) */
+    .hero-badge{
+      position:absolute; z-index:2;
+      width:var(--hero-badge-size); height:var(--hero-badge-size);
+      border-radius:50%; object-fit:cover; background:#fff;
+      bottom:calc(var(--hero-badge-size)/-2); right:calc(var(--hero-badge-size)/-2); /* center of the badge sits exactly at the image corner */
+      border:3px solid #fff; box-shadow:var(--shadow);
+      pointer-events:none;
+    }
+    @media (max-width:640px){ :root{ --hero-badge-size:112px } }
+    
+
+    /* Sections */
+    section{padding:56px 0}
+    /* Tighten the gap so Our Services is fully visible right after the hero */
+    .hero + section{padding-top:8px}
+    /* Reduce space between About and Contact */
+    #about{padding-bottom:24px}
+    /* Contact spacing tuned */
+    #contact{padding-top:12px; padding-bottom:32px}
+    /* Careers spacing tuned */
+    #careers{padding-top:12px; padding-bottom:40px}
+    .section-title{font-size:clamp(24px, 3vw, 36px); margin:0 0 10px}
+    .section-lead{color:var(--gray-700); margin:0 0 28px}
+
+    /* Mission */
+    .mission-card{background:linear-gradient(0deg, var(--white), var(--pink)); border:1px solid var(--pink-strong); border-radius:var(--radius); padding:22px; box-shadow:var(--shadow); border-left:4px solid var(--pink-strong)}
+    .mission-list{margin:8px 0 0 18px; color:var(--gray-700)}
+    .mission-list li::marker{ color: var(--pink-strong) }
+
+    /* Anchor offset so section titles are not hidden under sticky header */
+    section, main[id]{scroll-margin-top: var(--anchor-offset);} /* modern browsers */
+    section[id]:target::before{ /* fallback for older Safari; restrict to sections so grid layouts like #home aren't shifted */
+      content:""; display:block; height:var(--anchor-offset); margin-top:calc(var(--anchor-offset) * -1);
+    }
+    /* When we perform manual JS-centered scrolling, disable the :target offset to avoid double shifting */
+    html.manual-scroll section[id]:target::before{ display:none }
+
+    /* Services */
+    .cards{display:grid; grid-template-columns:repeat(3, 1fr); gap:20px}
+    .card{background:var(--white); border:1px solid var(--gray-200); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden; display:flex; flex-direction:column}
+    .card-media{height:160px}
+    /* Image focal helpers: add one of these classes to any <img class="card-media"> */
+    .pos-top{object-position:50% 0%}        /* show more top */
+    .pos-bottom{object-position:50% 100%}   /* show more bottom */
+    .pos-25{object-position:50% 25%}        /* slight up */
+    .pos-75{object-position:50% 75%}        /* slight down */
+    .card-body{padding:16px}
+    .card h3{margin:0 0 6px}
+    .card p{margin:0; color:var(--gray-700)}
+
+    /* About */
+    .about{display:grid; grid-template-columns:1fr 1fr; gap:24px; align-items:stretch; grid-template-areas:"head head" "left media"}
+    .about-head{grid-area:head}
+    .about-left{grid-area:left; display:flex}
+    .about-media{min-height:280px; grid-area:media; height:100%}
+    .about-box{background:linear-gradient(180deg, var(--pink), var(--white)); border:1px solid var(--pink-strong); border-radius:var(--radius); padding:22px; display:flex; flex-direction:column; height:100%}
+
+    /* Contact */
+    .contact{display:grid; grid-template-columns:1.1fr .9fr; grid-template-areas:"head head" "form side"; column-gap:24px; row-gap:24px}
+    .contact-head{grid-area:head}
+    .contact-form-wrap{grid-area:form}
+    .contact-side{grid-area:side; align-self:stretch}
+    form{background:var(--white); border:1px solid var(--gray-200); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow)}
+    label{display:block; font-weight:600; margin:8px 0 6px}
+    input, textarea{width:100%; padding:12px 14px; border:1px solid var(--gray-200); border-radius:12px; font:inherit; background:#fff}
+    textarea{min-height:120px; resize:vertical}
+    button[type=submit]{margin-top:12px; padding:12px 16px; border-radius:999px; border:1px solid #95AD7A; background:var(--pink-strong); font-weight:700}
+
+    .choice{display:flex; align-items:center; gap:12px; margin:6px 0}
+    /* Larger, aligned checkboxes for Careers roles */
+    .choice input[type=checkbox]{
+      width:20px; height:20px; min-width:20px; /* reserve space so text lines up */
+      accent-color: var(--pink-strong); /* baby-pink tick color */
+      border-radius:4px;
+      transform: scale(1.2);           /* visually larger checkbox */
+      transform-origin: left center;
+    }
+    .role-choices{ display:grid; grid-template-columns:1fr; row-gap:10px }
+    .role-fieldset legend{ padding:0 6px; color:var(--gray-700) }
+
+    /* Careers: Leave Your Info spans full container width (align with site boundaries) */
+    #careers h3.section-title{ max-width:none; margin:0 }
+    #careers form{ max-width:none; margin:0 }
+
+    .contact-side{display:grid; gap:16px; grid-template-rows:auto auto 1fr} /* make map fill remaining height */
+    .info-tile{background:var(--gray-100); border:1px solid var(--gray-200); border-radius:var(--radius); padding:18px}
+    .tile-head{display:flex; justify-content:space-between; align-items:baseline; gap:12px}
+    /* Contact: aligned key/value rows */
+    .info-row{display:flex; justify-content:space-between; align-items:baseline; gap:12px; flex-wrap:wrap}
+    .info-row .label{font-weight:600}
+    .info-row .value{display:flex; gap:10px; align-items:baseline}
+    .time{color:var(--gray-500); font-weight:600}
+    .email-tag{color:var(--pink-strong)}
+
+    /* Contact: success confirmation banner */
+    .success-banner{margin-top:12px; padding:12px 14px; border-radius:12px; border:1px solid var(--pink-strong); background:var(--pink); font-weight:600; box-shadow:var(--shadow); opacity:0; transform:translateY(-6px); transition:opacity .3s ease, transform .3s ease}
+    .success-banner.visible{opacity:1; transform:translateY(0)}
+    [hidden]{display:none !important}
+
+    /* Interactive map embed */
+    .map-embed{min-height:240px; height:100%; position:relative; border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow); border:1px solid var(--gray-200)}
+    .map-embed iframe{width:100%; height:100%; border:0}
+    .map-embed .map-link{position:absolute; right:10px; bottom:10px; background:rgba(255,255,255,.9); border:1px solid var(--gray-200); padding:6px 10px; border-radius:999px; font-weight:600; box-shadow:0 2px 8px rgba(0,0,0,.08)}
+
+    /* Footer */
+    footer{padding:28px 0; border-top:1px solid var(--gray-200); background:linear-gradient(0deg, var(--white), #f4f8ef)}
+    .foot{display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:10px; color:var(--gray-700)}
+
+    /* Responsive */
+    @media (max-width: 960px){
+      .hero, .about{grid-template-columns:1fr}
+      .contact{grid-template-columns:1fr; grid-template-areas:"head" "form" "side"}
+      .cards{grid-template-columns:1fr 1fr}
+    }
+    @media (max-width: 640px){
+      .navlinks{display:none}
+      .cards{grid-template-columns:1fr}
+      .hero-bullets{grid-template-columns:1fr}
+    }
+
+      
+    /* Header logo: plain image, no circle background/border */
+    .brand-logo{display:inline-block; height:36px; line-height:0}
+    .brand-logo img{height:36px; width:auto; display:block; object-fit:contain; border-radius:0}
+  </style>
+</head>
+<body><!-- Top Navigation -->
+  <header class="topbar" aria-label="Main Navigation">
+    <div class="container nav">
+      <div class="brand">
+        <!-- LOGO_PLACEHOLDER: Circular placeholder shown by default. Set the src on #brand-logo-img to your real logo file (SVG/PNG) when ready. -->
+        <a class="brand-logo" href="#home" aria-label="Given by Grace Homecare — Logo">
+          <img id="brand-logo-img" src="Asset/BrandLogo.png" alt="Given by Grace Homecare logo" />
+        </a>
+        <!-- /LOGO_PLACEHOLDER -->
+        <span>Given by Grace Homecare</span>
+      </div>
+      <nav class="navlinks" aria-label="Primary">
+        <a href="#home">Home</a>
+        <a href="#mission">Our Mission</a>
+        <a href="#services">Our Services</a>
+        <a href="#about">About Us</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <div class="ctas">
+        <a class="cta" href="#contact">Get Support</a>
+        <a class="cta" href="#careers">Careers</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <main id="home" class="container hero">
+    <div>
+      <h1>Compassionate, reliable care at home.</h1>
+      <p>We work passionately to see that your vision meets compassionate, holistic care and unwavering support.</p>
+      <div class="hero-bullets">
+        <div class="bullet"><span class="check"> 
+          <svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+        </span> Certified caregivers</div>
+        <div class="bullet"><span class="check"> 
+          <svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+        </span> Flexible schedules</div>
+        <div class="bullet"><span class="check"> 
+          <svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+        </span> Personalized care plans</div>
+        <div class="bullet"><span class="check">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+        </span> CPR Certified</div>
+        <div class="bullet"><span class="check">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+        </span> Mental Health Specialists.</div>
+        <div class="bullet"><span class="check">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+        </span> Top Class HIPPA and Health Standards.</div>
+      </div>
+      <a class="cta" href="#contact" aria-label="Jump to contact form">Request a call</a>
+    </div>
+    <div class="hero-media-wrap">
+      <img src="Asset/Hero.png" alt="Caregiver with client at home" class="hero-media" />
+      <img src="Asset/HeroBadge.png" alt="Company logo" class="hero-badge" />
+    </div>
+  </main>
+
+  <!-- Our Mission -->
+  <section id="mission" aria-labelledby="mission-title">
+    <div class="container">
+      <h2 id="mission-title" class="section-title">Our Mission</h2>
+      <p class="section-lead">To empower elderly and families through tailored, holistic and personalized care that promotes independence, dignity, and lasting well-being - because every story deserves a restorative chapter..</p>
+      <div class="mission-card">
+        <p>At Given by Grace Homecare, we are devoted to holistic care, nurturing the mind, body, and spirit of every individual under our care..</p>
+        <ul class="mission-list">
+          <li>Holistic & personalized — care plans that honor routines, culture, and goals.</li>
+          <li>Independence with dignity — gentle support for ADLs, safety, and mobility.</li>
+          <li>Family‑first communication — clear updates and one trusted point of contact.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  
+
+  <!-- Services -->
+  <section id="services" aria-labelledby="services-title">
+    <div class="container">
+      <h2 id="services-title" class="section-title">Our Services</h2>
+      <p class="section-lead">We believe every patient is different, so our services mix and match to bring you a personalized experience.</p>
+      <div class="cards">
+        <article class="card">
+          <img src="Asset/Serviceimage1.png" alt="Personal Care (ADLs)" class="card-media" style="width:100%; height:160px; object-fit:cover; display:block" />
+          <div class="card-body">
+            <h3>Personal Care (ADLs)</h3>
+            <p>bathing, dressing, toileting, transfers</p>
+          </div>
+        </article>
+        <article class="card">
+          <img src="Asset/Serviceimage2.png" alt="Meal Prep & Light Housekeeping" class="card-media" style="width:100%; height:160px; object-fit:cover; display:block" />
+          <div class="card-body">
+            <h3>Meal Prep & Light Housekeeping</h3>
+            <p>cooking, laundry, tidying</p>
+          </div>
+        </article>
+        <article class="card">
+          <img src="Asset/Serviceimage3.png" alt="Transportation & Errands" class="card-media" style="width:100%; height:160px; object-fit:cover; display:block" />
+          <div class="card-body">
+            <h3>Transportation & Errands</h3>
+            <p>appointments, pharmacy, shopping</p>
+          </div>
+        </article>
+        <article class="card">
+          <img src="Asset/Serviceimage4.png" alt="Family Respite Care" class="card-media" style="width:100%; height:160px; object-fit:cover; display:block" />
+          <div class="card-body">
+            <h3>Family Respite Care</h3>
+            <p>short-term caregiver relief</p>
+          </div>
+        </article>
+        <article class="card">
+          <img src="Asset/Serviceimage5.png" alt="Long-Distance Care Coordination" class="card-media" style="width:100%; height:160px; object-fit:cover; display:block" />
+          <div class="card-body">
+            <h3>Long-Distance Care Coordination</h3>
+            <p>remote check-ins & scheduling</p>
+          </div>
+        </article>
+        <article class="card">
+          <img src="Asset/Serviceimage6.png" alt="Disability Assistance" class="card-media" style="width:100%; height:160px; object-fit:cover; display:block" />
+          <div class="card-body">
+            <h3>Disability Assistance</h3>
+            <p>Accessibility, independent living, custom tasks</p>
+          </div>
+        </article>
+        <article class="card">
+          <img src="Asset/Serviceimage7.png" alt="Personalized Nursing" class="card-media" style="width:100%; height:160px; object-fit:cover; display:block" />
+          <div class="card-body">
+            <h3>Personalized Nursing</h3>
+            <p>tailored plans (e.g., Alzheimer’s, dementia, chronic conditions)</p>
+          </div>
+        </article>
+        <article class="card">
+          <img src="Asset/Serviceimage8.png" alt="Movement & Balance Assistance" class="card-media" style="width:100%; height:160px; object-fit:cover; display:block" />
+          <div class="card-body">
+            <h3>Movement & Balance Assistance</h3>
+            <p>gait help, fall prevention, light exercises</p>
+          </div>
+        </article>
+        <article class="card">
+          <img src="Asset/Serviceimage9.png" alt="Post-Hospital / Transitional Care" class="card-media" style="width:100%; height:160px; object-fit:cover; display:block" />
+          <div class="card-body">
+            <h3>Post-Hospital / Transitional Care</h3>
+            <p>recovery support after discharge</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Us -->
+  <section id="about" aria-labelledby="about-title" style="background:linear-gradient(0deg, #fff, #f4f8ef)">
+    <div class="container about">
+      <div class="about-head">
+        <h2 id="about-title" class="section-title">About Us</h2>
+        <p class="section-lead">We craft personalized, transformative care that nurtures wellness, resilience, and purpose.</p>
+      </div>
+      <div class="about-left">
+        <div class="about-box">
+          <p><strong>Why families choose us</strong></p>
+          <p>At Given by Grace Homecare, we integrate thoughtful strategies that foster growth and healing—so every client feels supported and empowered. Your journey toward wholeness is our mission, and we’re here to help you thrive with balance and renewed vitality.</p>
+          <ul>
+            <li>Fully vetted & trained caregivers</li>
+            <li>Transparent rates and clear communication</li>
+            <li>Care plans crafted around routines, not the other way around</li>
+          </ul>
+          
+        </div>
+      </div>
+      <img src="Asset/About.png" alt="Team or owner" class="about-media" style="width:100%; height:100%; object-fit:cover; border-radius:18px; display:block" />
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <!-- Contact -->
+  <section id="contact" aria-labelledby="contact-title">
+    <div class="container contact">
+      <div class="contact-head">
+        <h2 id="contact-title" class="section-title">Contact</h2>
+        <p class="section-lead">Tell us a little about your needs. We’ll reach out within 1 business day.</p>
+      </div>
+
+      <div class="contact-form-wrap">
+        <form id="contact-form" action="https://formspree.io/f/xyznpnjv" method="POST" accept-charset="UTF-8">
+          <input type="hidden" name="_subject" value="New Client" />
+          <input type="text" name="_honeypot" tabindex="-1" autocomplete="off" style="position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden" aria-hidden="true" />
+
+          <label for="name">Full Name</label>
+          <input id="name" name="name" placeholder="Jane Doe" required />
+
+          <label for="phone">Phone</label>
+          <input id="phone" name="phone" placeholder="(555) 123‑4567" />
+
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" placeholder="you@example.com" required />
+
+          <label for="message">How can we help?</label>
+          <textarea id="message" name="message" placeholder="Tell us about your situation…" required></textarea>
+
+          <button type="submit">Send Message</button>
+        </form>
+        <div id="contact-success" class="success-banner" role="status" aria-live="polite" hidden>Thanks for your message, We will contact you soon!</div>
+      </div>
+
+      <div class="contact-side">
+        <div class="info-tile">
+          <div class="tile-head">
+            <strong>Call</strong>
+            <span class="time">Mon–Fri 8am–5pm</span>
+          </div>
+          <div class="info-row">
+            <div class="label">Location</div>
+            <div class="value">151 Broadway St, Providence, Rhode Island</div>
+          </div>
+          <div class="info-row">
+            <div class="label">Phone</div>
+            <div class="value"><a href="tel:+14014974922">(401) 497‑4922</a></div>
+          </div>
+        </div>
+        <div class="info-tile">
+          <strong>Email</strong><br/>
+          <div><a href="mailto:contact@givenbygrace"><span class="email-tag">contact</span>@givenbygrace</a></div>
+          <div><a href="mailto:info@givenbygrace"><span class="email-tag">info</span>@givenbygrace</a></div>
+          <div><a href="mailto:support@givenbygrace"><span class="email-tag">support</span>@givenbygrace</a></div>
+        </div>
+        
+        <div class="map-embed" role="region" aria-label="Map: 151 Broadway St, Providence, RI">
+          <iframe
+            src="https://www.google.com/maps?q=151%20Broadway%20St%2C%20Providence%2C%20RI&z=16&output=embed"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"></iframe>
+          <a class="map-link" href="https://www.google.com/maps/place/151+Broadway+St,+Providence,+RI+02903" target="_blank" rel="noopener">Open in Google Maps ↗</a>
+        </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Careers (embedded on the same page, moved to bottom) -->
+  <section id="careers" aria-labelledby="careers-title">
+    <div class="container">
+      <h2 id="careers-title" class="section-title">Careers</h2>
+      <p class="section-lead">Join Given by Grace Homecare. Explore current roles and leave your info below.</p>
+
+      <!-- Roles (mirroring Our Services) -->
+      <div class="cards">
+        <article class="card">
+          <img src="Asset/Careerimage1.png" alt="Homemakers" class="card-media" style="width:100%; height:160px; object-fit:cover; display:block" />
+          <div class="card-body">
+            <h3>Homemakers</h3>
+            <p>Meal prep, light housekeeping, errands, and daily support.</p>
+          </div>
+        </article>
+        <article class="card">
+          <img src="Asset/Careerimage2.png" alt="Certified Nurse Assistant (CNA)" class="card-media" style="width:100%; height:160px; object-fit:cover; display:block" />
+          <div class="card-body">
+            <h3>Certified Nurse Assistant (CNA)</h3>
+            <p>Hands-on care, ADLs support, vital signs, and care coordination.</p>
+          </div>
+        </article>
+      </div>
+
+      <!-- Employee application form -->
+      <h3 class="section-title" style="font-size:clamp(20px,2.4vw,28px); margin-top:32px">Leave Your Info</h3>
+      <form id="apply-form" action="https://formspree.io/f/mjkaoaoe" method="POST" accept-charset="UTF-8">
+        <input type="hidden" name="_subject" value="New Application — Given by Grace Homecare" />
+        <input type="text" name="_honeypot" tabindex="-1" autocomplete="off" style="position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden" aria-hidden="true" />
+
+        <label for="app-name">Full Name</label>
+        <input id="app-name" name="name" placeholder="Jane Doe" required />
+
+        <label for="app-email">Email</label>
+        <input id="app-email" name="email" type="email" placeholder="you@example.com" required />
+
+        <label for="app-phone">Phone</label>
+        <input id="app-phone" name="phone" placeholder="(555) 123‑4567" />
+
+        <fieldset class="role-fieldset" style="margin-top:10px">
+          <legend>Roles you’re applying for</legend>
+          <div class="role-choices">
+            <label class="choice"><input type="checkbox" name="roles" value="Homemakers"/><span>Homemakers</span></label>
+            <label class="choice"><input type="checkbox" name="roles" value="Certified Nurse Assistant (CNA)"/><span>Certified Nurse Assistant (CNA)</span></label>
+          </div>
+        </fieldset>
+
+        <label for="app-message">Anything else (optional)</label>
+        <textarea id="app-message" name="message" placeholder="Experience, certifications, schedule…"></textarea>
+
+        <button type="submit">Submit Application</button>
+      </form>
+      <div id="apply-success" class="success-banner" role="status" aria-live="polite" hidden>Thanks! We received your application.</div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container foot">
+      <div>© <span id="year"></span> Given by Grace Homecare</div>
+      <div style="display:flex; gap:14px">
+        <a href="#home">Home</a>
+        <a href="#mission">Our Mission</a>
+        <a href="#services">Our Services</a>
+        <a href="#about">About Us</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Update footer year
+    document.getElementById('year').textContent = new Date().getFullYear();
+      // Contact form handler — Formspree (AJAX, stays on page)
+    (function(){
+      const form = document.getElementById('contact-form');
+      if(!form) return;
+      form.addEventListener('submit', async (e)=>{
+        e.preventDefault();
+        const data = new FormData(form); // includes name, email, phone, message, _subject
+        // Ensure Formspree gets a reply-to and subject (sometimes required for notifications)
+        if(!data.get('_subject')) data.append('_subject','New Client');
+        const emailField = form.querySelector('[name="email"]');
+        if(emailField && emailField.value) data.append('_replyto', emailField.value);
+        try{
+          const res = await fetch(form.action, {
+            method:'POST',
+            body: data,
+            headers:{ 'Accept': 'application/json' }
+          });
+          if(res.ok){
+            form.reset();
+            const banner = document.getElementById('contact-success');
+            if(banner){
+              banner.textContent = 'Thanks for your message, We will contact you soon!';
+              banner.hidden = false;
+              requestAnimationFrame(()=> banner.classList.add('visible'));
+              setTimeout(()=>{ banner.classList.remove('visible'); banner.hidden = true; }, 6000);
+            }
+          }else{
+            const out = await res.json().catch(()=>null);
+            const msg = out && out.errors ? out.errors.map(e=>e.message).join(', ') : 'Please check your info and try again.';
+            alert('Problem sending your message: ' + msg);
+          }
+        }catch(err){
+          alert('Network error. Please try again later.');
+        }
+      });
+    })();
+  
+      // Careers application form handler — Formspree (AJAX)
+      (function(){
+        const form = document.getElementById('apply-form');
+        if(!form) return;
+        form.addEventListener('submit', async (e)=>{
+          e.preventDefault();
+          const checked = Array.from(form.querySelectorAll('input[name="roles"]:checked')).map(el=>el.value);
+          if(checked.length === 0){
+            alert('Please select at least one role.');
+            return;
+          }
+          const data = new FormData(form);
+          const subj = 'New Application — ' + checked.join(', ');
+          data.set('_subject', subj);
+          const emailEl = document.getElementById('app-email');
+          if(emailEl && emailEl.value) data.append('_replyto', emailEl.value);
+          data.append('roles_summary', checked.join(', '));
+          try{
+            const res = await fetch(form.action, { method:'POST', body:data, headers:{ 'Accept':'application/json' } });
+            if(res.ok){
+              form.reset();
+              const banner = document.getElementById('apply-success');
+              if(banner){
+                banner.textContent = 'Thanks! We received your application.';
+                banner.hidden = false;
+                requestAnimationFrame(()=> banner.classList.add('visible'));
+                setTimeout(()=>{ banner.classList.remove('visible'); banner.hidden = true; }, 6000);
+              }else{
+                alert('Thanks! We received your application.');
+              }
+            }else{
+              const out = await res.json().catch(()=>null);
+              const msg = out && out.errors ? out.errors.map(e=>e.message).join(', ') : 'Please check your info and try again.';
+              alert('Problem submitting your application: ' + msg);
+            }
+          }catch(err){
+            alert('Network error. Please try again later.');
+          }
+        });
+      })();
+      
+    // Center scroll behavior for the Contact section when clicking top buttons
+    (function(){
+      const html = document.documentElement;
+      const navHeight = parseFloat(getComputedStyle(html).getPropertyValue('--nav-height')) || 72;
+      const bias = parseFloat(getComputedStyle(html).getPropertyValue('--contact-center-bias')) || 24;
+
+      function centerScrollToContact(){
+        const el = document.getElementById('contact');
+        if(!el) return;
+        const rect = el.getBoundingClientRect();
+        const docTop = window.pageYOffset + rect.top; // absolute top position
+        const vh = window.innerHeight;
+        const h = rect.height;
+        // If section shorter than viewport, center it; otherwise align just under the sticky nav
+        let top = (h < vh)
+          ? docTop - ((vh - h) / 2) - navHeight - bias
+          : docTop - navHeight - 8 - bias; // small breathing room
+        top = Math.max(0, top);
+        // Temporarily disable :target offset to prevent double adjustment
+        html.classList.add('manual-scroll');
+        window.scrollTo({ top, behavior:'smooth' });
+        // Re-enable normal behavior after the smooth scroll duration
+        setTimeout(()=> html.classList.remove('manual-scroll'), 700);
+      }
+
+      // Intercept clicks on any link that targets #contact (nav + CTA)
+      document.querySelectorAll('a[href="#contact"]').forEach(a => {
+        a.addEventListener('click', (e) => {
+          e.preventDefault();
+          centerScrollToContact();
+          // Update URL hash without triggering default jump
+          if(history.pushState){ history.pushState(null, '', '#contact'); }
+          else { location.hash = '#contact'; }
+        });
+      });
+
+      // Handle direct loads with #contact in URL
+      window.addEventListener('load', () => {
+        if(location.hash === '#contact'){
+          setTimeout(centerScrollToContact, 0);
+        }
+      });
+    })();
+  
+    // Center scroll behavior for the Careers section when clicking top buttons
+    (function(){
+      const html = document.documentElement;
+      const navHeight = parseFloat(getComputedStyle(html).getPropertyValue('--nav-height')) || 72;
+      const bias = parseFloat(getComputedStyle(html).getPropertyValue('--careers-center-bias')) || 40;
+
+      function centerScrollToCareers(){
+        const el = document.getElementById('careers');
+        if(!el) return;
+        const rect = el.getBoundingClientRect();
+        const docTop = window.pageYOffset + rect.top;
+        const vh = window.innerHeight;
+        const h = rect.height;
+        let top = (h < vh)
+          ? docTop - ((vh - h) / 2) - navHeight - bias
+          : docTop - navHeight - 8 - bias;
+        // clamp so we don't attempt to scroll past the bottom of the page
+        const maxTop = (document.documentElement.scrollHeight || document.body.scrollHeight) - vh;
+        top = Math.max(0, Math.min(top, maxTop));
+        html.classList.add('manual-scroll');
+        window.scrollTo({ top, behavior:'smooth' });
+        setTimeout(()=> html.classList.remove('manual-scroll'), 700);
+      }
+
+      // Intercept clicks on any link that targets #careers (nav + button)
+      document.querySelectorAll('a[href="#careers"]').forEach(a => {
+        a.addEventListener('click', (e) => {
+          e.preventDefault();
+          centerScrollToCareers();
+          if(history.pushState){ history.pushState(null, '', '#careers'); }
+          else { location.hash = '#careers'; }
+        });
+      });
+
+      // Handle direct loads with #careers in URL
+      window.addEventListener('load', () => {
+        if(location.hash === '#careers'){
+          setTimeout(centerScrollToCareers, 0);
+        }
+      });
+    })();
+  
+    
+    // Center scroll behavior for the Services section when clicking top buttons
+    (function(){
+      const html = document.documentElement;
+      const navHeight = parseFloat(getComputedStyle(html).getPropertyValue('--nav-height')) || 72;
+      const bias = parseFloat(getComputedStyle(html).getPropertyValue('--services-center-bias')) || 0;
+
+      function centerScrollToServices(){
+        const el = document.getElementById('services');
+        if(!el) return;
+        const rect = el.getBoundingClientRect();
+        const docTop = window.pageYOffset + rect.top;
+        const vh = window.innerHeight;
+        const h = rect.height;
+        let top = (h < vh)
+          ? docTop - ((vh - h) / 2) - navHeight - bias
+          : docTop - navHeight - 8 - bias;
+        const maxTop = (document.documentElement.scrollHeight || document.body.scrollHeight) - vh;
+        top = Math.max(0, Math.min(top, maxTop));
+        html.classList.add('manual-scroll');
+        window.scrollTo({ top, behavior:'smooth' });
+        setTimeout(()=> html.classList.remove('manual-scroll'), 700);
+      }
+
+      // Intercept clicks to #services
+      document.querySelectorAll('a[href="#services"]').forEach(a => {
+        a.addEventListener('click', (e) => {
+          e.preventDefault();
+          centerScrollToServices();
+          if(history.pushState){ history.pushState(null, '', '#services'); }
+          else { location.hash = '#services'; }
+        });
+      });
+
+      // Handle direct loads with #services in URL
+      window.addEventListener('load', () => {
+        if(location.hash === '#services'){
+          setTimeout(centerScrollToServices, 0);
+        }
+      });
+    })();
+  </script>
+
+
+  
