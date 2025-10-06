@@ -36,7 +36,7 @@
     /* Top bar */
     .topbar{position:sticky; top:0; z-index:50; background:rgba(255,255,255,.8); backdrop-filter:saturate(180%) blur(10px); border-bottom:1px solid var(--gray-200)}
     .container{max-width:1100px; margin-inline:auto; padding:0 20px}
-    .nav{display:flex; align-items:center; justify-content:space-between; height:72px}
+    .nav{display:flex; align-items:center; justify-content:space-between; height:72px; position:relative}
     .brand{display:flex; align-items:center; gap:.6rem; font-weight:700}
     /* .brand-badge removed (legacy circle placeholder). Using .brand-logo <img> instead. */
     .navlinks{display:flex; gap:1rem}
@@ -45,6 +45,14 @@
     .cta{padding:.7rem 1rem; border-radius:999px; background:var(--pink-strong); color:#111; font-weight:700; border:1px solid #95AD7A}
     .cta:hover{filter:brightness(.98)}
     .ctas{display:flex; gap:10px} /* wrapper for multiple top-right CTAs */
+    /* Mobile kebab (3 dots) and dropdown */
+    .kebab{display:none; background:none; border:0; padding:8px; border-radius:12px}
+    .kebab:focus-visible{outline:2px solid var(--pink-strong)}
+    .kebab .dot{width:4px; height:4px; background:var(--gray-700); border-radius:50%; display:block; margin:3px 0}
+    .mobile-menu{position:absolute; right:0; top:var(--nav-height); background:#fff; border:1px solid var(--gray-200); border-radius:12px; box-shadow:var(--shadow); padding:8px; display:none; z-index:60; min-width:220px}
+    .mobile-menu.open{display:block}
+    .mobile-menu a{display:block; padding:10px 12px; border-radius:8px; color:var(--gray-700)}
+    .mobile-menu a:hover{background:var(--pink); color:var(--gray-900)}
 
     /* Hero */
     .hero{display:grid; grid-template-columns:1.1fr .9fr; gap:36px; align-items:center; padding:32px 0 calc(8px + var(--hero-badge-size)*0.5)}
@@ -178,14 +186,29 @@
 
     /* Responsive */
     @media (max-width: 960px){
+      /* Tablet & small laptop adjustments (desktop proportions unchanged) */
+      .container{padding:0 16px}
       .hero, .about{grid-template-columns:1fr}
+      section{padding:48px 0}
       .contact{grid-template-columns:1fr; grid-template-areas:"head" "form" "side"}
-      .cards{grid-template-columns:1fr 1fr}
+      .cards{grid-template-columns:1fr 1fr} /* Services & Careers show as 2-up on tablet */
+      .card-media{height:180px}
     }
     @media (max-width: 640px){
+      /* Phone layout: vertical flow; desktop proportions untouched */
       .navlinks{display:none}
-      .cards{grid-template-columns:1fr}
+      .kebab{display:inline-grid; place-items:center}
+      .container{padding:0 14px}
+      section{padding:36px 0}
+      .cards{grid-template-columns:1fr} /* Services & Careers become single column on phones */
+      .card-media{height:200px}
       .hero-bullets{grid-template-columns:1fr}
+      button[type=submit]{width:100%}
+      .about-media{min-height:220px}
+      /* Mobile-only: stack About Us as Head → Why families choose us → Team/Owner image */
+      .about{grid-template-columns:1fr; grid-template-areas:"head" "left" "media"}
+      .about-left{grid-area:left}
+      .about-media{grid-area:media}
     }
 
       
@@ -213,8 +236,18 @@
         <a href="#contact">Contact</a>
       </nav>
       <div class="ctas">
-        <a class="cta" href="#contact">Get Support</a>
+        <button class="kebab" aria-label="Open menu" aria-haspopup="true" aria-expanded="false" aria-controls="mobile-menu">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        </button>
         <a class="cta" href="#careers">Careers</a>
+      </div>
+      <div id="mobile-menu" class="mobile-menu" role="menu" aria-label="Section menu">
+        <a role="menuitem" href="#home">Home</a>
+        <a role="menuitem" href="#mission">Our Mission</a>
+        <a role="menuitem" href="#services">Our Services</a>
+        <a role="menuitem" href="#about">About Us</a>
+        <a role="menuitem" href="#contact">Contact</a>
+        <a role="menuitem" href="#careers">Careers</a>
       </div>
     </div>
   </header>
@@ -504,6 +537,22 @@
   <script>
     // Update footer year
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Mobile kebab menu toggle
+    (function(){
+      const btn = document.querySelector('.kebab');
+      const menu = document.getElementById('mobile-menu');
+      if(!btn || !menu) return;
+      function close(){ menu.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+      btn.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        const isOpen = menu.classList.toggle('open');
+        btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+      document.addEventListener('click', ()=>{ if(menu.classList.contains('open')) close(); });
+      document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') close(); });
+      menu.querySelectorAll('a').forEach(a=> a.addEventListener('click', ()=> close()));
+    })();
       // Contact form handler — Formspree (AJAX, stays on page)
     (function(){
       const form = document.getElementById('contact-form');
